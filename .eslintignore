@@ -1,3 +1,5 @@
 node_modules
 build
 .eslintrc.js
+cypress/integration/2-advanced-examples
+cypress/plugins

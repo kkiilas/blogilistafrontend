@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import LogoutForm from './components/LogoutForm'
@@ -8,11 +9,12 @@ import Notification from './components/Notification'
 import ErrorNotification from './components/ErrorNotification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { setMessage } from './reducers/messageReducer'
+import { setErrorMessage } from './reducers/errorMessageReducer'
 
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
-  const [message, setMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
   // const loginFormRef = useRef()
@@ -21,20 +23,12 @@ const App = () => {
     try {
       const user = await loginService.login(userObject)
       // loginFormRef.current.toggleVisibility()
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setMessage('Login succeeded')
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+      dispatch(setMessage('Login succeeded'))
     } catch (exception) {
-      setErrorMessage('Wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
+      dispatch(setErrorMessage('Wrong username or password'))
     }
   }
 
@@ -49,17 +43,15 @@ const App = () => {
     try {
       const createdBlog = await blogService.create(blogObject)
       blogFormRef.current.toggleVisibility()
+      console.log('addBlog user', user)
       createdBlog.user = user
       setBlogs(blogs.concat(createdBlog))
-      setMessage(`A new blog ${createdBlog.title} by ${createdBlog.author}.`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+      dispatch(
+        setMessage(`A new blog ${createdBlog.title} by ${createdBlog.author}.`)
+      )
+      console.log('addBlog blogs', blogs)
     } catch (exception) {
-      setErrorMessage(exception.response.data.errorMessage)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
+      dispatch(setErrorMessage(exception.response.data.error))
     }
   }
 
@@ -68,13 +60,16 @@ const App = () => {
     delete blogObject.id
     try {
       const updatedBlog = await blogService.update(id, blogObject)
-      const updatedBlogs = blogs.map(blog => blog.id !== id ? blog : updatedBlog)
+      const updatedBlogs = blogs.map((blog) =>
+        blog.id !== id ? blog : updatedBlog
+      )
       setBlogs(updatedBlogs)
     } catch (exception) {
-      setErrorMessage(`${blogObject.title} has already been removed from server`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
+      dispatch(
+        setErrorMessage(
+          `${blogObject.title} has already been removed from server`
+        )
+      )
     }
   }
 
@@ -82,21 +77,17 @@ const App = () => {
     const id = blogToRemove.id
     try {
       await blogService.remove(id)
-      setBlogs(blogs.filter(blog => blog.id !== id))
-      setMessage(`Removed ${blogToRemove.title} by ${blogToRemove.author}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+      setBlogs(blogs.filter((blog) => blog.id !== id))
+      dispatch(
+        setMessage(`Removed ${blogToRemove.title} by ${blogToRemove.author}`)
+      )
     } catch (exception) {
-      setErrorMessage(exception.response.data.errorMessage)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
+      dispatch(setErrorMessage(exception.response.data.error))
     }
   }
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const blogs = await blogService.getAll()
       setBlogs(blogs)
     })()
@@ -118,7 +109,7 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <Togglable buttonLabel='Create a new blog' ref={blogFormRef} >
+    <Togglable buttonLabel="Create a new blog" ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
     </Togglable>
   )
@@ -127,7 +118,7 @@ const App = () => {
     return (
       <div className="container">
         <h2>Log in to application</h2>
-        <ErrorNotification errorMessage={errorMessage} />
+        <ErrorNotification />
         {loginForm()}
       </div>
     )
@@ -136,12 +127,9 @@ const App = () => {
   return (
     <div className="container">
       <h2>Blogs</h2>
-      <ErrorNotification errorMessage={errorMessage} />
-      <Notification message={message} />
-      <LogoutForm
-        name={user.name}
-        handleLogout={handleLogout}
-      />
+      <ErrorNotification />
+      <Notification />
+      <LogoutForm name={user.name} handleLogout={handleLogout} />
       <br />
       {blogForm()}
       <Blogs

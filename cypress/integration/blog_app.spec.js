@@ -5,7 +5,7 @@ describe('Blog app', function () {
     cy.createUser({
       username: 'käyttäjä',
       name: 'Vänrikki Stool',
-      password: 'salainen'
+      password: 'salainen',
     })
   })
 
@@ -44,24 +44,33 @@ describe('Blog app', function () {
 
     it('a blog can be created', function () {
       cy.contains('Create a new blog').click()
-      cy.get('#title').type('Prince Andrew Settles Sexual Abuse Lawsuit With Virginia Giuffre')
+      cy.get('#title').type(
+        'Prince Andrew Settles Sexual Abuse Lawsuit With Virginia Giuffre'
+      )
       cy.get('#author').type('Benjamin Weiser')
-      cy.get('#url').type('https://www.nytimes.com/2022/02/15/nyregion/prince-andrew-virginia-giuffre-settlement.html')
+      cy.get('#url').type(
+        'https://www.nytimes.com/2022/02/15/nyregion/prince-andrew-virginia-giuffre-settlement.html'
+      )
       cy.contains('create').click()
-      cy.contains('Prince Andrew Settles Sexual Abuse Lawsuit With Virginia Giuffre')
+      cy.contains(
+        'Prince Andrew Settles Sexual Abuse Lawsuit With Virginia Giuffre'
+      )
     })
 
     describe('A blog exists', function () {
       beforeEach(function () {
         cy.createBlog({
-          title: 'Accounting Firm Cuts Ties With Trump and Retracts Financial Statements',
+          title:
+            'Accounting Firm Cuts Ties With Trump and Retracts Financial Statements',
           author: 'Ben Protess and William K. Rashbaum',
-          url: 'https://www.nytimes.com/2022/02/14/nyregion/mazars-trump-organization-financial-statements.html'
+          url: 'https://www.nytimes.com/2022/02/14/nyregion/mazars-trump-organization-financial-statements.html',
         })
       })
 
       it('it can be liked', function () {
-        cy.contains('Accounting Firm Cuts Ties With Trump and Retracts Financial Statements').as('theBlog')
+        cy.contains(
+          'Accounting Firm Cuts Ties With Trump and Retracts Financial Statements'
+        ).as('theBlog')
         cy.get('@theBlog').contains('view').click()
         cy.get('@theBlog').contains('likes 0')
         cy.get('@theBlog').contains('like').click()
@@ -69,7 +78,9 @@ describe('Blog app', function () {
       })
 
       it('it can be deleted by the user who created it', function () {
-        cy.contains('Accounting Firm Cuts Ties With Trump and Retracts Financial Statements').as('theBlog')
+        cy.contains(
+          'Accounting Firm Cuts Ties With Trump and Retracts Financial Statements'
+        ).as('theBlog')
         cy.get('@theBlog').contains('view').click()
         cy.get('@theBlog').contains('remove').click()
         cy.get('@theBlog').should('not.exist')
@@ -80,7 +91,7 @@ describe('Blog app', function () {
           cy.createUser({
             username: 'användare',
             name: 'Fänrik Stool',
-            password: 'hemlig'
+            password: 'hemlig',
           })
 
           cy.login({ username: 'användare', password: 'hemlig' })
@@ -88,7 +99,7 @@ describe('Blog app', function () {
           cy.createBlog({
             title: 'U.S. Battles Putin by Disclosing His Next Possible Moves',
             author: 'Julian E. Barnes and Helene Cooper',
-            url: 'https://www.nytimes.com/2022/02/12/us/politics/russia-information-putin-biden.html'
+            url: 'https://www.nytimes.com/2022/02/12/us/politics/russia-information-putin-biden.html',
           })
 
           cy.contains('logout').click()
@@ -96,7 +107,9 @@ describe('Blog app', function () {
         })
 
         it('it cannot be deleted by the user who did not create it', function () {
-          cy.contains('U.S. Battles Putin by Disclosing His Next Possible Moves').as('theBlog')
+          cy.contains(
+            'U.S. Battles Putin by Disclosing His Next Possible Moves'
+          ).as('theBlog')
           cy.get('@theBlog').contains('view').click()
           cy.get('@theBlog').should('not.contain', 'remove')
         })
@@ -105,15 +118,18 @@ describe('Blog app', function () {
       describe('Two more blogs exist and each blog has a different number of likes', function () {
         beforeEach(function () {
           cy.createBlog({
-            title: 'Sandy Hook Families Settle With Gunmaker for $73 Million Over Massacre',
+            title:
+              'Sandy Hook Families Settle With Gunmaker for $73 Million Over Massacre',
             author: 'Rick Rojas, Karen Zraick and Troy Closson',
-            url: 'https://www.nytimes.com/2022/02/15/nyregion/sandy-hook-families-settlement.html'
+            url: 'https://www.nytimes.com/2022/02/15/nyregion/sandy-hook-families-settlement.html',
           })
 
           cy.createBlog({
-            title: 'How a Secret Assault Allegation Against an Anchor Upended CNN',
-            author: 'Emily Steel, Jodi Kantor, Michael M. Grynbaum, James B. Stewart and John Koblin',
-            url: 'https://www.nytimes.com/2022/02/15/business/jeff-zucker-cnn.html'
+            title:
+              'How a Secret Assault Allegation Against an Anchor Upended CNN',
+            author:
+              'Emily Steel, Jodi Kantor, Michael M. Grynbaum, James B. Stewart and John Koblin',
+            url: 'https://www.nytimes.com/2022/02/15/business/jeff-zucker-cnn.html',
           })
 
           cy.get('.blog').then(($blogs) => {
@@ -134,7 +150,9 @@ describe('Blog app', function () {
         it('the blogs are shown in the descending order of likes received', function () {
           cy.get('.blog').then(($blogs) => {
             $blogs.map((i, blog) => {
-              cy.wrap(blog).contains(`likes ${3 - i}`).click()
+              cy.wrap(blog)
+                .contains(`likes ${3 - i}`)
+                .click()
             })
           })
         })

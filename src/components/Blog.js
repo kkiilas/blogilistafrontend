@@ -18,7 +18,7 @@ const Blog = ({ blog, user, addLike, handleRemoveClick }) => {
       likes: blog.likes + 1,
       author: blog.author,
       title: blog.title,
-      url: blog.url
+      url: blog.url,
     })
   }
 
@@ -32,8 +32,9 @@ const Blog = ({ blog, user, addLike, handleRemoveClick }) => {
     return (
       <div>
         <button
-          className='btn btn-secondary btn-outline-info'
-          onClick={removeBlog}>
+          className="btn btn-secondary btn-outline-info"
+          onClick={removeBlog}
+        >
           remove
         </button>
       </div>
@@ -41,23 +42,19 @@ const Blog = ({ blog, user, addLike, handleRemoveClick }) => {
   }
 
   return (
-    <div className='blog'>
-      {blog.title} {blog.author} {' '}
-      <button onClick={toggleVisibility}>
-        {visible ? 'hide' : 'view'}
-      </button>
+    <div className="blog">
+      {blog.title} {blog.author}{' '}
+      <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
       <div style={showWhenVisible}>
         <div>{blog.url}</div>
         <div>
           likes {blog.likes}
           <button onClick={updateBlog}>like</button>
         </div>
-        <div>
-          {blog.user.name}
-        </div>
+        <div>{blog.user.name}</div>
         {user.username === blog.user.username && removeButton()}
       </div>
-    </div >
+    </div>
   )
 }
 
@@ -65,7 +62,7 @@ Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   addLike: PropTypes.func.isRequired,
-  handleRemoveClick: PropTypes.func.isRequired
+  handleRemoveClick: PropTypes.func.isRequired,
 }
 
 export default Blog

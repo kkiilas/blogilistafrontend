@@ -11,7 +11,8 @@ const LoginForm = ({ createCredentials }) => {
   const handleLogin = (event) => {
     event.preventDefault()
     createCredentials({
-      username, password,
+      username,
+      password,
     })
     setUsername('')
     setPassword('')
@@ -23,7 +24,7 @@ const LoginForm = ({ createCredentials }) => {
         <div>
           username
           <input
-            id='username'
+            id="username"
             value={username}
             onChange={handleUsernameChange}
           />
@@ -31,7 +32,7 @@ const LoginForm = ({ createCredentials }) => {
         <div>
           password
           <input
-            id='password'
+            id="password"
             type="password"
             value={password}
             onChange={handlePasswordChange}
@@ -44,7 +45,7 @@ const LoginForm = ({ createCredentials }) => {
 }
 
 LoginForm.propTypes = {
-  createCredentials: PropTypes.func.isRequired
+  createCredentials: PropTypes.func.isRequired,
 }
 
 export default LoginForm

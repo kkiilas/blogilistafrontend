@@ -1,20 +1,14 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
-const ErrorNotification = ({ errorMessage }) => {
+const ErrorNotification = () => {
+  const errorMessage = useSelector((state) => state.errorMessage)
+
   return (
     <>
-      {errorMessage !== null &&
-        <div className='error'>
-          {errorMessage}
-        </div>
-      }
+      {errorMessage.length > 0 && <div className="error">{errorMessage}</div>}
     </>
   )
-}
-
-ErrorNotification.propTypes = {
-  errorMessage: PropTypes.string
 }
 
 export default ErrorNotification

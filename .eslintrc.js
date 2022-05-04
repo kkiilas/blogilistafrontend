@@ -7,7 +7,9 @@ module.exports = {
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -17,12 +19,14 @@ module.exports = {
     "sourceType": "module"
   },
   "plugins": [
+    // "react", "jest", "cypress", "prettier"
     "react", "jest", "cypress"
   ],
   "rules": {
     "indent": [
       "error",
-      2
+      2,
+      { "flatTernaryExpressions": true }
     ],
     "linebreak-style": [
       "error",
@@ -30,7 +34,8 @@ module.exports = {
     ],
     "quotes": [
       "error",
-      "single"
+      "single",
+      { "allowTemplateLiterals": true }
     ],
     "semi": [
       "error",
@@ -45,7 +50,8 @@ module.exports = {
       "error", { "before": true, "after": true }
     ],
     "no-console": 0,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    // "prettier/prettier": "error"
   },
   "settings": {
     "react": {
