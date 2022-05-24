@@ -1,8 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 import Blog from './Blog'
 
-const Blogs = ({ blogs, user, addLike, handleRemoveClick }) => {
+const Blogs = () => {
   const extractAuthorsSurname = (blog) =>
     blog.author.split(' and ')[0].split(', ')[0].split(' ').pop().toUpperCase()
 
@@ -11,45 +11,25 @@ const Blogs = ({ blogs, user, addLike, handleRemoveClick }) => {
     const likes2 = blog2.likes
     const author1 = extractAuthorsSurname(blog1)
     const author2 = extractAuthorsSurname(blog2)
-
-    // return likes1 !== likes2
-    //   ? likes2 - likes1
-    //   : author1 < author2
-    //   ? -1
-    //   : author1 > author2
-    //   ? 1
-    //   : 0
-
-    if (likes1 !== likes2) {
-      return likes2 - likes1
-    } else if (author1 < author2) {
-      return -1
-    } else if (author1 > author2) {
-      return 1
-    }
-    return 0
+    // prettier-ignore
+    return likes1 !== likes2
+      ? likes2 - likes1
+      : author1 < author2
+        ? -1
+        : author1 > author2
+          ? 1
+          : 0
   }
+
+  const blogs = useSelector(({ blogs }) => [...blogs].sort(compare))
 
   return (
     <div>
-      {blogs.sort(compare).map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          user={user}
-          addLike={addLike}
-          handleRemoveClick={handleRemoveClick}
-        />
+      {blogs.map((blog) => (
+        <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   )
-}
-
-Blogs.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  user: PropTypes.object.isRequired,
-  addLike: PropTypes.func.isRequired,
-  handleRemoveClick: PropTypes.func.isRequired,
 }
 
 export default Blogs

@@ -1,21 +1,22 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { useField } from '../hooks/index'
+import { createCredentials } from '../reducers/userReducer'
 
-const LoginForm = ({ createCredentials }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
-  const handleUsernameChange = (event) => setUsername(event.target.value)
-  const handlePasswordChange = (event) => setPassword(event.target.value)
+const LoginForm = () => {
+  const dispatch = useDispatch()
+  const { reset: resetUsername, ...username } = useField('username', 'text')
+  const { reset: resetPassword, ...password } = useField('password', 'password')
 
   const handleLogin = (event) => {
     event.preventDefault()
-    createCredentials({
-      username,
-      password,
-    })
-    setUsername('')
-    setPassword('')
+    const user = {
+      username: username.value,
+      password: password.value
+    }
+    resetUsername()
+    resetPassword()
+    dispatch(createCredentials(user))
   }
 
   return (
@@ -23,29 +24,16 @@ const LoginForm = ({ createCredentials }) => {
       <form onSubmit={handleLogin}>
         <div>
           username
-          <input
-            id="username"
-            value={username}
-            onChange={handleUsernameChange}
-          />
+          <input {...username} />
         </div>
         <div>
           password
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
+          <input {...password} />
         </div>
         <button type="submit">login</button>
       </form>
     </div>
   )
-}
-
-LoginForm.propTypes = {
-  createCredentials: PropTypes.func.isRequired,
 }
 
 export default LoginForm

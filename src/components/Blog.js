@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
+import { addLike, remove } from '../reducers/blogReducer'
 
-const Blog = ({ blog, user, addLike, handleRemoveClick }) => {
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch()
+  const username = useSelector((state) => state.user.username)
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -10,22 +14,20 @@ const Blog = ({ blog, user, addLike, handleRemoveClick }) => {
     setVisible(!visible)
   }
 
-  const updateBlog = (event) => {
+  const handleLikeClick = (event) => {
     event.preventDefault()
-    addLike({
-      id: blog.id,
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-    })
+    dispatch(
+      addLike({
+        ...blog,
+        likes: blog.likes + 1
+      })
+    )
   }
 
-  const removeBlog = (event) => {
+  const handleRemoveClick = (event) => {
     event.preventDefault()
     window.confirm(`Remove ${blog.title} by ${blog.author}?`) &&
-      handleRemoveClick(blog)
+      dispatch(remove(blog))
   }
 
   const removeButton = () => {
@@ -33,7 +35,7 @@ const Blog = ({ blog, user, addLike, handleRemoveClick }) => {
       <div>
         <button
           className="btn btn-secondary btn-outline-info"
-          onClick={removeBlog}
+          onClick={handleRemoveClick}
         >
           remove
         </button>
@@ -49,20 +51,17 @@ const Blog = ({ blog, user, addLike, handleRemoveClick }) => {
         <div>{blog.url}</div>
         <div>
           likes {blog.likes}
-          <button onClick={updateBlog}>like</button>
+          <button onClick={handleLikeClick}>like</button>
         </div>
         <div>{blog.user.name}</div>
-        {user.username === blog.user.username && removeButton()}
+        {username === blog.user.username && removeButton()}
       </div>
     </div>
   )
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  addLike: PropTypes.func.isRequired,
-  handleRemoveClick: PropTypes.func.isRequired,
+  blog: PropTypes.object.isRequired
 }
 
 export default Blog

@@ -1,17 +1,20 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
+import { render } from './test-utils'
 import Blog from './Blog'
+import * as blogReducer from '../reducers/blogReducer'
 
 describe('<Blog />', () => {
   let component
-  const mockHandler = jest.fn()
 
   beforeEach(() => {
     const user = {
       name: 'Nipitiri',
-      username: 'käyttäjä',
+      username: 'käyttäjä'
     }
+
+    const preloadedState = { user }
 
     const blog = {
       title:
@@ -19,17 +22,10 @@ describe('<Blog />', () => {
       author: 'Jamelle Bouie',
       url: 'https://www.nytimes.com/2022/02/11/opinion/supreme-court-alabama-maps.html',
       likes: 1,
-      user: user,
+      user: user
     }
 
-    component = render(
-      <Blog
-        blog={blog}
-        user={user}
-        addLike={mockHandler}
-        handleRemoveClick={mockHandler}
-      />
-    )
+    component = render(<Blog blog={blog} />, { preloadedState })
     component
     // screen.debug()
   })
@@ -59,12 +55,14 @@ describe('<Blog />', () => {
     ).toBeVisible()
     expect(screen.getByText('likes 1')).toBeVisible()
   })
+
   test('calls onClick twice after clicking the like button twice', () => {
     const likeButton = component.getByText('like')
+    const spy = jest.spyOn(blogReducer, 'addLike')
 
     fireEvent.click(likeButton)
     fireEvent.click(likeButton)
 
-    expect(mockHandler.mock.calls).toHaveLength(2)
+    expect(spy.mock.calls).toHaveLength(2)
   })
 })

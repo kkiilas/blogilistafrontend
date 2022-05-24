@@ -5,7 +5,7 @@ describe('Blog app', function () {
     cy.createUser({
       username: 'käyttäjä',
       name: 'Vänrikki Stool',
-      password: 'salainen',
+      password: 'salainen'
     })
   })
 
@@ -45,15 +45,15 @@ describe('Blog app', function () {
     it('a blog can be created', function () {
       cy.contains('Create a new blog').click()
       cy.get('#title').type(
-        'Prince Andrew Settles Sexual Abuse Lawsuit With Virginia Giuffre'
+        'Over 75 Percent of Long Covid Patients Were Not Hospitalized for Initial Illness, Study Finds'
       )
-      cy.get('#author').type('Benjamin Weiser')
+      cy.get('#author').type('Pam Belluck')
       cy.get('#url').type(
-        'https://www.nytimes.com/2022/02/15/nyregion/prince-andrew-virginia-giuffre-settlement.html'
+        'https://www.nytimes.com/2022/05/18/health/long-covid-hospitalization.html'
       )
       cy.contains('create').click()
       cy.contains(
-        'Prince Andrew Settles Sexual Abuse Lawsuit With Virginia Giuffre'
+        'Over 75 Percent of Long Covid Patients Were Not Hospitalized for Initial Illness, Study Finds'
       )
     })
 
@@ -63,7 +63,7 @@ describe('Blog app', function () {
           title:
             'Accounting Firm Cuts Ties With Trump and Retracts Financial Statements',
           author: 'Ben Protess and William K. Rashbaum',
-          url: 'https://www.nytimes.com/2022/02/14/nyregion/mazars-trump-organization-financial-statements.html',
+          url: 'https://www.nytimes.com/2022/02/14/nyregion/mazars-trump-organization-financial-statements.html'
         })
       })
 
@@ -91,7 +91,7 @@ describe('Blog app', function () {
           cy.createUser({
             username: 'användare',
             name: 'Fänrik Stool',
-            password: 'hemlig',
+            password: 'hemlig'
           })
 
           cy.login({ username: 'användare', password: 'hemlig' })
@@ -99,7 +99,7 @@ describe('Blog app', function () {
           cy.createBlog({
             title: 'U.S. Battles Putin by Disclosing His Next Possible Moves',
             author: 'Julian E. Barnes and Helene Cooper',
-            url: 'https://www.nytimes.com/2022/02/12/us/politics/russia-information-putin-biden.html',
+            url: 'https://www.nytimes.com/2022/02/12/us/politics/russia-information-putin-biden.html'
           })
 
           cy.contains('logout').click()
@@ -121,7 +121,7 @@ describe('Blog app', function () {
             title:
               'Sandy Hook Families Settle With Gunmaker for $73 Million Over Massacre',
             author: 'Rick Rojas, Karen Zraick and Troy Closson',
-            url: 'https://www.nytimes.com/2022/02/15/nyregion/sandy-hook-families-settlement.html',
+            url: 'https://www.nytimes.com/2022/02/15/nyregion/sandy-hook-families-settlement.html'
           })
 
           cy.createBlog({
@@ -129,7 +129,7 @@ describe('Blog app', function () {
               'How a Secret Assault Allegation Against an Anchor Upended CNN',
             author:
               'Emily Steel, Jodi Kantor, Michael M. Grynbaum, James B. Stewart and John Koblin',
-            url: 'https://www.nytimes.com/2022/02/15/business/jeff-zucker-cnn.html',
+            url: 'https://www.nytimes.com/2022/02/15/business/jeff-zucker-cnn.html'
           })
 
           cy.get('.blog').then(($blogs) => {

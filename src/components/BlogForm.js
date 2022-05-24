@@ -1,25 +1,26 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useField } from '../hooks/index'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ createBlog }) => {
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
-
-  const handleTitleChange = (event) => setNewTitle(event.target.value)
-  const handleAuthorChange = (event) => setNewAuthor(event.target.value)
-  const handleUrlChange = (event) => setNewUrl(event.target.value)
+const BlogForm = ({ blogFormRef }) => {
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
+  const { reset: resetTitle, ...title } = useField('title', 'text')
+  const { reset: resetAuthor, ...author } = useField('author', 'text')
+  const { reset: resetUrl, ...url } = useField('url', 'url')
 
   const addBlog = (event) => {
     event.preventDefault()
-    createBlog({
-      url: newUrl,
-      title: newTitle,
-      author: newAuthor
-    })
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+    const blogObject = {
+      url: url.value,
+      title: title.value,
+      author: author.value
+    }
+    resetTitle()
+    resetAuthor()
+    resetUrl()
+    dispatch(createBlog(blogObject, blogFormRef, user))
   }
 
   return (
@@ -28,29 +29,20 @@ const BlogForm = ({ createBlog }) => {
       <form onSubmit={addBlog}>
         <div>
           title:
-          <input id="title" value={newTitle} onChange={handleTitleChange} />
+          <input {...title} />
         </div>
         <div>
           author:
-          <input id="author" value={newAuthor} onChange={handleAuthorChange} />
+          <input {...author} />
         </div>
         <div>
           url:
-          <input
-            id="url"
-            type="url"
-            value={newUrl}
-            onChange={handleUrlChange}
-          />
+          <input {...url} />
         </div>
         <button type="submit">create</button>
       </form>
     </div>
   )
-}
-
-BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired
 }
 
 export default BlogForm
